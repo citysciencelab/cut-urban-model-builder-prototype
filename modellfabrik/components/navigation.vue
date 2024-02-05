@@ -1,5 +1,5 @@
 <template>
-  <v-navigation-drawer border="0" width="120" justify-center>
+  <v-navigation-drawer width="120" justify-center permanent style="border: 0">
     <v-card class="d-flex flex-column justify-top align-center" width="100%" height="100%" color="#ffffff" flat>
       
       <v-list lines="two">
