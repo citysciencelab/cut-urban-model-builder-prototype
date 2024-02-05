@@ -27,6 +27,25 @@ import ModelToolbar from './modelToolbar.vue';
 </script>
 
 <script>
+import { defineStore } from 'pinia';
+
+export const useModelStore = defineStore('model', {
+  state: () => ({
+    // Define your state properties here
+    primitives: [],
+    test: "test"
+  }),
+  getters: {
+    // Define your getters here
+  },
+  actions: {
+    // Define your actions here
+    addPrimitive(primitive) {
+      this.primitives.push(primitive);
+    },
+  },
+});
+
 export default {
     head() {
         return {
