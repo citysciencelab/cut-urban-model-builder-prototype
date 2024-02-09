@@ -2,11 +2,11 @@
     <ClientOnly>
 
         <v-card color="white" elevation="1" style="height: 500px">
-            <v-stage :config="configKonva" >
+            <v-stage :config="configKonva" @dblclick="store.updateSelectedPrimitive(null)">
                 <v-layer>
-                    <v-circle v-for="primitive in store.getPrimitives" :config="configCircle" draggable="true" @transformend="handleTransformEnd"
-                        :name="primitive.id" @click="store.updateSelectedPrimitive(primitive)">
-                    </v-circle>
+                    <v-shape v-for="primitive in store.getPrimitives" :config="store.getPrimitiveStyle(primitive)" draggable="true" @transformend="handleTransformEnd"
+                        :name="primitive.id" @click="store.updateSelectedPrimitive(primitive)" @dragstart="store.updateSelectedPrimitive(primitive)">
+                    </v-shape>
                     <v-transformer ref="transformer" />
                 </v-layer>
             </v-stage>

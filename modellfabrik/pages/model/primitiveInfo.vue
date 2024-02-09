@@ -4,9 +4,16 @@
             <v-card-subtitle>{{ store.getSelectedPrimitive.constructor.name }}</v-card-subtitle>
             <v-card-title>{{ store.getSelectedPrimitive.name }}</v-card-title>
         </v-card-item>
-
-
-
+        <v-card-text>
+            <v-row>
+                <v-col>
+                    <v-text-field v-model="store.getSelectedPrimitive.name" label="Name"></v-text-field>
+                </v-col>
+                <v-col>
+                    <v-text-field v-model="store.getSelectedPrimitive.initial" label="Initial"></v-text-field>
+                </v-col>
+            </v-row>
+        </v-card-text>
     </v-card>
 </template>
 

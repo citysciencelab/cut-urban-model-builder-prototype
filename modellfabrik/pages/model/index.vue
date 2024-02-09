@@ -6,13 +6,17 @@
                     <h1>Model</h1>
 
                 </v-col>
+            </v-row>
+            <v-row>
                 <v-col cols="12">
                     <ModelToolbar />
                 </v-col>
-                <v-col cols="8">
+            </v-row>
+            <v-row>
+                <v-col cols="9">
                     <ModelCanvas />
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="3">
                     <PrimitiveInfo />
                 </v-col>
             </v-row>
@@ -45,6 +49,34 @@ export const useModelStore = defineStore('model', {
 
         selectedPrimitive: null,
 
+        variableStyle: {
+            sceneFunc: function (context, shape) {
+                context.beginPath();
+                context.arc(25, 25, 25, 0, 2 * Math.PI); // Add this line to create a circle
+                context.closePath();
+                // (!) Konva specific method, it is very important
+                context.fillStrokeShape(shape);
+            },
+            fill: "white",
+            stroke: "black",
+            strokeWidth: 2
+        },
+        stockStyle: {
+            sceneFunc: function (context, shape) {
+                context.beginPath();
+                context.moveTo(0, 0);
+                context.lineTo(200, 0);
+                context.lineTo(200, 50);
+                context.lineTo(0, 50);
+                context.closePath();
+                // (!) Konva specific method, it is very important
+                context.fillStrokeShape(shape);
+            },
+            fill: "red",
+            stroke: "black",
+            strokeWidth: 2
+        }
+
     }),
     getters: {
         // Define your getters here
@@ -55,6 +87,7 @@ export const useModelStore = defineStore('model', {
         getSelectedPrimitive() {
             return this.selectedPrimitive;
         }
+
         
     },
     actions: {
@@ -74,6 +107,15 @@ export const useModelStore = defineStore('model', {
         },
         loadModel(url) {
             //this.model = loadInsightMaker(modeltext.text());
+        },
+        getPrimitiveStyle(primitive) {
+            if (primitive.constructor.name === "Stock") {
+                return this.stockStyle;
+            } else if (primitive.constructor.name === "Variable") {
+                return this.variableStyle;
+            } else {
+                return {};
+            }
         }
     },
 });
