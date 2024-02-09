@@ -17,9 +17,11 @@
     "vuetify": "^3.5.1"
   },
   "dependencies": {
+    "@jsplumb/browser-ui": "^6.2.10",
     "@mdi/font": "^7.4.47",
     "@pinia/nuxt": "^0.5.1",
     "canvas": "^2.11.2",
+    "fabric": "^5.3.0",
     "konva": "^9.3.2",
     "pinia": "^2.1.7",
     "simulation": "^4.0.0",
