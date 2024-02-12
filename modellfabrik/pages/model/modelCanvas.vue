@@ -1,40 +1,40 @@
 <template>
     <ClientOnly>
-
         <v-card color="white" elevation="1" style="height: 500px">
-            <v-stage :config="configKonva" @dblclick="store.updateSelectedPrimitive(null)">
+            <v-stage :config="configKonva" @dblclick="store.updateSelectedPrimitive(null)" @mousedown="handleStageMouseDown" @touchstart="handleStageMouseDown">
                 <v-layer>
-                    <v-shape v-for="primitive in store.getPrimitives" :config="store.getPrimitiveStyle(primitive)" draggable="true" @transformend="handleTransformEnd"
+                    <v-text-path text="sdfgd"></v-text-path>
+                </v-layer>
+                <v-layer>
+                    <v-shape v-for="primitive in store.getPrimitives" :config="store.getPrimitiveStyle(primitive)" draggable="true" 
                         :name="primitive.id" @click="store.updateSelectedPrimitive(primitive)" @dragstart="store.updateSelectedPrimitive(primitive)">
                     </v-shape>
+                    
                     <v-transformer ref="transformer" />
                 </v-layer>
             </v-stage>
         </v-card>
-        
-
     </ClientOnly>
 </template>
 
 
-<script setup>
-import { useModelStore } from './index.vue';
-
-const store = useModelStore();
-
-</script>
-
 
 <script>
+import { useModelStore } from './index.vue';
 
+const width = window.innerWidth;
+const height = window.innerHeight;
 
 export default {
+    setup() {
+        const store = useModelStore(); 
+        return { store }
+    },
     data() {
         return {
             configKonva: {
-                width: window.innerWidth,
-                height: window.innerHeight
-            },
+                width: width,
+                height: height            },
             configCircle: {
                 x: 100,
                 y: 100,
@@ -54,27 +54,8 @@ export default {
         };
     },
     methods: {
-        logPrimitives(primitive) {
-            console.log(primitive.id)
-            console.log(primitive.name)
-            console.log(primitive.constructor.name)
-        },
-        handleTransformEnd(e) {
-            // shape is transformed, let us save new attrs back to the node
-            // find element in our state
-            const rect = store.getPrimitives.find(
-                (r) => r.id === this.selectedShapeName
-            );
-            // update the state
-            rect.x = e.target.x();
-            rect.y = e.target.y();
-            rect.rotation = e.target.rotation();
-            rect.scaleX = e.target.scaleX();
-            rect.scaleY = e.target.scaleY();
 
-            // change fill
-            rect.fill = Konva.Util.getRandomColor();
-        },
+
         handleStageMouseDown(e) {
             // clicked on stage - clear selection
             if (e.target === e.target.getStage()) {
@@ -92,12 +73,9 @@ export default {
 
             // find clicked rect by its name
             const name = e.target.name();
-            const rect = store.getPrimitives.find((r) => r.name === name);
-            if (rect) {
-                this.selectedShapeName = name;
-            } else {
-                this.selectedShapeName = '';
-            }
+            console.log(e.target);
+            this.selectedShapeName = name;
+
             this.updateTransformer();
         },
         updateTransformer() {
@@ -107,6 +85,7 @@ export default {
             const { selectedShapeName } = this;
 
             const selectedNode = stage.findOne('.' + selectedShapeName);
+
             // do nothing if selected node is already attached
             if (selectedNode === transformerNode.node()) {
                 return;

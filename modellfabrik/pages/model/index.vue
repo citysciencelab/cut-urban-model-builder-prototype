@@ -59,7 +59,9 @@ export const useModelStore = defineStore('model', {
             },
             fill: "white",
             stroke: "black",
-            strokeWidth: 2
+            strokeWidth: 2,
+            width: 50,
+            height: 50
         },
         stockStyle: {
             sceneFunc: function (context, shape) {
@@ -74,14 +76,15 @@ export const useModelStore = defineStore('model', {
             },
             fill: "red",
             stroke: "black",
-            strokeWidth: 2
+            strokeWidth: 2,
+            width: 200,
+            height: 50
         }
 
     }),
     getters: {
         // Define your getters here
         getPrimitives() {
-            console.log(this.model.find());
             return this.model.find();
         },
         getSelectedPrimitive() {
@@ -100,10 +103,10 @@ export const useModelStore = defineStore('model', {
             this.selectedPrimitive = primitive;
         },
         addStock(name, initial) {
-            this.model.Stock({ name: name, initial: initial });
+            this.selectedPrimitive = this.model.Stock({ name: name, initial: initial });
         },
         addVariable(name, value) {
-            this.model.Variable({ name: name, value: value });
+            this.selectedPrimitive = this.model.Variable({ name: name, value: value });
         },
         loadModel(url) {
             //this.model = loadInsightMaker(modeltext.text());
