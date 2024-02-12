@@ -1,14 +1,18 @@
 <template>
     <ClientOnly>
         <v-card color="white" elevation="1" style="height: 500px">
-            <v-stage :config="configKonva" @dblclick="store.updateSelectedPrimitive(null)" @mousedown="handleStageMouseDown" @touchstart="handleStageMouseDown">
+            <v-stage :config="configKonva" @mousedown="handleStageMouseDown" @touchstart="handleStageMouseDown">
+                
                 <v-layer>
-                    <v-text-path text="sdfgd"></v-text-path>
-                </v-layer>
-                <v-layer>
+                    <v-text v-if="store.linkMode" :config="{text: 'Some text on canvas', fontSize: 15}"/>
+
+
+
+                    
                     <v-shape v-for="primitive in store.getPrimitives" :config="store.getPrimitiveStyle(primitive)" draggable="true" 
                         :name="primitive.id" @click="store.updateSelectedPrimitive(primitive)" @dragstart="store.updateSelectedPrimitive(primitive)">
                     </v-shape>
+
                     
                     <v-transformer ref="transformer" />
                 </v-layer>
@@ -61,6 +65,7 @@ export default {
             if (e.target === e.target.getStage()) {
                 this.selectedShapeName = '';
                 this.updateTransformer();
+                this.store.updateSelectedPrimitive(null)
                 return;
             }
 
@@ -73,7 +78,6 @@ export default {
 
             // find clicked rect by its name
             const name = e.target.name();
-            console.log(e.target);
             this.selectedShapeName = name;
 
             this.updateTransformer();

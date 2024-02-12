@@ -48,11 +48,13 @@ export const useModelStore = defineStore('model', {
         }),
 
         selectedPrimitive: null,
+        linkMode: false,
 
         variableStyle: {
+
             sceneFunc: function (context, shape) {
                 context.beginPath();
-                context.arc(25, 25, 25, 0, 2 * Math.PI); // Add this line to create a circle
+                context.ellipse(40, 20, 40, 20, 0, 0, 2 * Math.PI); 
                 context.closePath();
                 // (!) Konva specific method, it is very important
                 context.fillStrokeShape(shape);
@@ -60,8 +62,8 @@ export const useModelStore = defineStore('model', {
             fill: "white",
             stroke: "black",
             strokeWidth: 2,
-            width: 50,
-            height: 50
+            width: 80,
+            height: 40,
         },
         stockStyle: {
             sceneFunc: function (context, shape) {
@@ -74,7 +76,7 @@ export const useModelStore = defineStore('model', {
                 // (!) Konva specific method, it is very important
                 context.fillStrokeShape(shape);
             },
-            fill: "red",
+            fill: "#FAFAFA",
             stroke: "black",
             strokeWidth: 2,
             width: 200,
@@ -89,6 +91,9 @@ export const useModelStore = defineStore('model', {
         },
         getSelectedPrimitive() {
             return this.selectedPrimitive;
+        },
+        getLinkModeColor() {
+            return this.linkMode ? "cut-orange" : "cut-grey";
         }
 
         
@@ -102,11 +107,14 @@ export const useModelStore = defineStore('model', {
         updateSelectedPrimitive(primitive) {
             this.selectedPrimitive = primitive;
         },
-        addStock(name, initial) {
-            this.selectedPrimitive = this.model.Stock({ name: name, initial: initial });
+        addStock() {
+            this.selectedPrimitive = this.model.Stock({ name: "Neuer Stock" });
         },
-        addVariable(name, value) {
-            this.selectedPrimitive = this.model.Variable({ name: name, value: value });
+        addVariable() {
+            this.selectedPrimitive = this.model.Variable({ name: "Neue Variable" });
+        },
+        addFlow() {
+            this.selectedPrimitive = this.model.Flow({ name: "Neuer Flow" });
         },
         loadModel(url) {
             //this.model = loadInsightMaker(modeltext.text());
@@ -119,6 +127,9 @@ export const useModelStore = defineStore('model', {
             } else {
                 return {};
             }
+        },
+        toggleLinkMode() {
+            this.linkMode = !this.linkMode;
         }
     },
 });
