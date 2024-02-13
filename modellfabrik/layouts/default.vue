@@ -5,6 +5,5 @@
       <TopBar />
       <NuxtPage />
     </v-main>
-
   </v-app>
 </template>

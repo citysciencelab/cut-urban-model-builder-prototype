@@ -23,5 +23,8 @@ export default defineNuxtConfig({
       },
     },
   },
-  devtools: { enabled: true }
+  devtools: { enabled: true },
+  pinia: {
+    storesDirs: ['./stores/**'],
+  },
 })
