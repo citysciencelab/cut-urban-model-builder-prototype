@@ -5,7 +5,6 @@
                 <v-card-actions>
                     <v-btn color="cut-grey" slim icon="mdi-variable" density="compact" @click="store.addVariable" />
                     <v-btn color="cut-grey" slim icon="mdi-alpha-s-box" density="compact" @click="store.addStock" />
-                    <v-btn color="cut-grey" slim icon="mdi-alpha-f-box" density="compact" @click="store.addFlow" />
 
                     <v-divider vertical class="ml-3"></v-divider>
 
@@ -17,9 +16,9 @@
 
                 </v-card-actions>
             </v-col>
-            <v-col cols="4" >
+            <v-col cols="4" class="d-flex flex-row-reverse">
                 <v-card-actions>
-                    <v-btn prepend-icon="mdi-play-box" variant="outlined" bg-color="white" color="black" class="justify-end">Simulation starten</v-btn>
+                    <v-btn prepend-icon="mdi-play-box" variant="outlined" bg-color="white" color="black" class="justify-end" @click="store.runSimulation">Simulation starten</v-btn>
                 </v-card-actions>
             </v-col>
 

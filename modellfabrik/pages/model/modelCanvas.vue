@@ -2,19 +2,24 @@
     <ClientOnly>
         <v-card color="white" elevation="1" style="height: 500px">
             <v-stage :config="configKonva" @mousedown="handleStageMouseDown" @touchstart="handleStageMouseDown">
-                
-                <v-layer>
-                    <v-text v-if="store.linkMode" :config="{text: 'Some text on canvas', fontSize: 15}"/>
+
+                <v-layer>     
+
+                    <v-group v-for="primitive in store.getPrimitives"  @click="store.updateSelectedPrimitive(primitive)" @dragstart="store.updateSelectedPrimitive(primitive)" :draggable="!store.linkMode" >
+
+                        
+                        
+                        <v-shape :config="store.getPrimitiveStyle(primitive)" :name="primitive.id"  />
+                        <v-text :config="{ text: primitive.name, fontSize: 15 }" />
+                        <v-image v-if="store.linkMode" :config="{ image: linkImage, x: -25, y: 10, width: 20, height: 20 }" @click="handleNewLink(primitive)" />
 
 
+                    </v-group>
 
-                    
-                    <v-shape v-for="primitive in store.getPrimitives" :config="store.getPrimitiveStyle(primitive)" draggable="true" 
-                        :name="primitive.id" @click="store.updateSelectedPrimitive(primitive)" @dragstart="store.updateSelectedPrimitive(primitive)">
-                    </v-shape>
-
-                    
                     <v-transformer ref="transformer" />
+                </v-layer>
+                <v-layer>
+                    <v-line :config="this.lineConfig" />
                 </v-layer>
             </v-stage>
         </v-card>
@@ -31,35 +36,54 @@ const height = window.innerHeight;
 
 export default {
     setup() {
-        const store = useModelStore(); 
+        const store = useModelStore();
         return { store }
     },
     data() {
         return {
             configKonva: {
                 width: width,
-                height: height            },
-            configCircle: {
-                x: 100,
-                y: 100,
-                radius: 70,
-                fill: "red",
-                stroke: "black",
-                strokeWidth: 4
-            },
-            configRect: {
-                x: 100,
-                y: 100,
-                fill: "green",
-                stroke: "black",
-                strokeWidth: 4
+                height: height
             },
             selectedShapeName: '',
+            linkImage: null,
+            newLink: [],
+            lineConfig: {
+                stroke: 'black',
+                strokeWidth: 0,
+                points: [0, 0, 100, 100],
+            }
         };
     },
+    created() {
+        this.store.addVariable();
+        this.store.addStock();
+        
+        const image = new window.Image();
+        image.src = './img/link-img.png';
+        image.onload = () => {
+            this.linkImage = image;
+        };
+
+    },
+    unmounted() {
+        this.store.deleteModel();
+    },
     methods: {
-
-
+        handleNewLink(primitive){
+            if (this.store.linkMode) {
+                if (this.newLink.length === 0) {
+                    this.newLink.push(primitive);
+                    console.log(this.newLink);
+                } else {
+                    this.newLink.push(primitive);
+                    console.log(this.newLink);
+                    this.store.addLink(this.newLink[0], this.newLink[1]);
+                    this.newLink = [];
+                    this.store.toggleLinkMode();
+                }
+            }
+        },
         handleStageMouseDown(e) {
             // clicked on stage - clear selection
             if (e.target === e.target.getStage()) {
@@ -78,6 +102,7 @@ export default {
 
             // find clicked rect by its name
             const name = e.target.name();
+
             this.selectedShapeName = name;
 
             this.updateTransformer();

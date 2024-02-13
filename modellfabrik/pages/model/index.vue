@@ -46,7 +46,7 @@ export const useModelStore = defineStore('model', {
             timeLength: 100,
             timeUnits: "Years"
         }),
-
+        results: [],
         selectedPrimitive: null,
         linkMode: false,
 
@@ -116,20 +116,45 @@ export const useModelStore = defineStore('model', {
         addFlow() {
             this.selectedPrimitive = this.model.Flow({ name: "Neuer Flow" });
         },
+        addLink(from, to) {
+            this.selectedPrimitive = this.model.Link(from, to, { name: "Neuer Link" });
+        },
         loadModel(url) {
             //this.model = loadInsightMaker(modeltext.text());
         },
         getPrimitiveStyle(primitive) {
+
+            let style = {};
+
             if (primitive.constructor.name === "Stock") {
-                return this.stockStyle;
+                style =  this.stockStyle;
             } else if (primitive.constructor.name === "Variable") {
-                return this.variableStyle;
+                style =   this.variableStyle;
+            } 
+
+            if (this.linkMode) {
+                style.stroke = "#f8aa36";
+                style.strokeWidth = 5;
             } else {
-                return {};
+                style.stroke = "black";
+                style.strokeWidth = 2;
             }
+
+            return style
         },
         toggleLinkMode() {
             this.linkMode = !this.linkMode;
+        },
+        runSimulation() {
+            this.results.push(this.model.simulate());
+            console.log(this.results);
+        },
+        deleteModel() {
+            this.model = new Model({
+                timeStart: 2020,
+                timeLength: 100,
+                timeUnits: "Years"
+            });
         }
     },
 });
